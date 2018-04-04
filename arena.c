@@ -15,6 +15,9 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -88,6 +91,31 @@ void *alloc_arena_mmap(size_t arena_size)
 	return arena;
 }
 
+char *arena_file_path;
+
+void *alloc_arena_file(size_t arena_size)
+{
+	void *arena;
+	int fd;
+
+	fd = open(arena_file_path, O_RDWR);
+	if (fd == -1) {
+		perror("open");
+		exit(1);
+	}
+
+	arena = mmap(NULL, arena_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+	if (arena == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+
+	memset(arena, 0, arena_size);
+
+	close(fd);
+
+	return arena;
+}
 
 #ifdef SHM_HUGETLB
 void *alloc_arena_shm(size_t arena_size)

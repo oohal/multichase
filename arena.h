@@ -18,5 +18,10 @@
 
 void *alloc_arena_shm(size_t arena_size);
 void *alloc_arena_mmap(size_t arena_size);
+void *alloc_arena_file(size_t arena_size);
+
+/* path of file to mmap in alloc_arena_file() */
+extern char *arena_file_path;
+
 
 #endif

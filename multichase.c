@@ -538,7 +538,7 @@ int main(int argc, char **argv)
 
         setvbuf(stdout, NULL, _IOLBF, BUFSIZ);
 
-        while ((c = getopt(argc, argv, "ac:F:Hm:n:oO:S:s:T:t:vXyW:"
+        while ((c = getopt(argc, argv, "ac:f:F:Hm:n:oO:S:s:T:t:vXyW:"
                           )) != -1) {
                 switch (c) {
                 case 'a':
@@ -625,6 +625,10 @@ int main(int argc, char **argv)
                 case 'H':
                         alloc_arena = alloc_arena_shm;
                         break;
+		case 'f':
+			alloc_arena = alloc_arena_file;
+			arena_file_path = optarg;
+			break;
                 case 'W':
                         is_weighted_mbind = 1;
                         char* tok = NULL, *saveptr = NULL;
